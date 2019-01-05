@@ -29,8 +29,9 @@
           v-flex(xs1 sm1 md1 )
             v-text-field(label="追加ダメ計" :value="item.addDmg + baseAddDmg(item.class)")
           v-flex(xs12 sm12 md12 )
-            power-table(:power="item.power")
-
+            power-table(:power="item.power" :accordion="true")
+          v-flex(xs12 sm12 md12 )
+            v-divider
 </template>
 
 <script>

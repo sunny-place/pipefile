@@ -18,7 +18,8 @@ v-container(grid-list-md text-xs-center)
   classes(:pClass="cData.physicalClass", :mClass="cData.magicalClass", :oClass="cData.otherClass")
   skill(:lSkill="getLevelSkill", :oSkill="cData.otherSkill")
   weapon(:weapons="cData.weapons", :pClass="cData.physicalClass", :eStatus="endStatus")
-    
+  armor(:armor="cData.armor", :pMax="maxPhysicalLevel()", :eStatus="endStatus")
+  accessory(:accessory="cData.accessory")
 
 </template>
 
@@ -29,6 +30,8 @@ import Status from '~/components/parts/sw25/Status.vue'
 import Classes from '~/components/parts/sw25/Classes.vue'
 import Skill from '~/components/parts/sw25/Skill.vue'
 import Weapon from '~/components/parts/sw25/Weapon.vue'
+import Armor from '~/components/parts/sw25/Armor.vue'
+import Accessory from '~/components/parts/sw25/Accessory.vue'
 
 export default {
   components: {
@@ -38,6 +41,8 @@ export default {
     Classes,
     Skill,
     Weapon,
+    Armor,
+    Accessory,
   },
   data() {
     return {
@@ -93,8 +98,35 @@ export default {
             power: 20,
             critical: 11,
             addDmg: 1,
-          }
-        ]
+          },
+          {
+            name: "ソード",
+            usage: "１H",
+            class: "fighter",
+            requireStr: 1,
+            accuracyMod: 1,
+            power: 20,
+            critical: 11,
+            addDmg: 1,
+          },
+        ],
+        armor: {
+          body: {name: "プレートメイル", require: 0, avoid: 0, guard: 1},
+          shield: {name: "バックラー", require: 0, avoid: 0, guard: 1},
+          other:[{name: "おまもり", require: 0, avoid: 1, guard: 1}],
+        },
+        accessory: {
+          head: {name: "髪飾り", desc: ""},
+          face: {name: "お面", desc: ""},
+          ear: {name: "イヤリング", desc: ""},
+          neck: {name: "首輪", desc: ""},
+          back: {name: "バックパック", desc: ""},
+          rHand: {name: "指輪", desc: ""},
+          lHand: {name: "腕輪", desc: ""},
+          waist: {name: "ベルト", desc: ""},
+          foot: {name: "くつ", desc: ""},
+          other: {name: "そのた", desc: ""},
+        },
       }
     }
   },
@@ -120,9 +152,9 @@ export default {
       }
     },
     characterLevel() {
-      var p = Math.max.apply(null,Object.values(this.cData.physicalClass).map(function(o){return o.value;}));
-      var m = Math.max.apply(null,Object.values(this.cData.magicalClass).map(function(o){return o.value;}));
-      var o = Math.max.apply(null,Object.values(this.cData.otherClass).map(function(o){return o.value;}));
+      var p = this.maxPhysicalLevel();
+      var m = this.maxMagicalLevel();
+      var o = this.maxOtherLevel();
       return Math.max(p,m,o);
       // return p;
     },
@@ -153,7 +185,17 @@ export default {
         value : v,
         bonus : Math.floor(v/6),
       }
-    }
+    },
+    maxPhysicalLevel() {
+      return Math.max.apply(null,Object.values(this.cData.physicalClass).map(function(o){return o.value;}));
+    },
+    maxMagicalLevel() {
+      return Math.max.apply(null,Object.values(this.cData.magicalClass).map(function(o){return o.value;}));
+    },
+    maxOtherLevel() {
+      return Math.max.apply(null,Object.values(this.cData.otherClass).map(function(o){return o.value;}));
+    },
+
   }
 }
 

@@ -1,14 +1,26 @@
 <template lang="pug">
-  v-card
-    p(v-for="item in powerTable") {{item}}
+  v-container(fluid grid-list-lg pa-0)
+    v-btn.mb-2(block v-if="accordion" @click="show = !show") {{ show ? '威力表を閉じる' : '威力表を開く' }}
+    v-slide-y-transition
+      v-container(fluid grid-list-lg pa-0 v-show="show")
+        v-layout(row wrap)
+          v-flex(xs1 sm1 md1)
+            span 出目
+          v-flex(xs1 sm1 md1 v-for="item in headers")
+            span {{item}}
+          v-flex(xs1 sm1 md1)
+            span 数値
+          v-flex(xs1 sm1 md1 v-for="item in powerTable")
+            span {{item}}
 </template>
 
 <script>
 
 export default {
-    props: ['power'],
+    props: ['power','accordion'],
     data() {
       return {
+        headers: ["2","3","4","5","6","7","8","9","10","11","12"],
         point: [
           [10,23,32,39,51,74],
           [5,11,24,30,36,41,51,56,59],
@@ -22,6 +34,7 @@ export default {
           [3,7,9,14,19,20,31,35,38,43,47,54,57,60,66,71,73,77,78],
         ],
         max: 80,
+        show: (this.accordion) ? false : true,
       }
     },
     computed: {
@@ -37,6 +50,7 @@ export default {
           });
           idx += 1;
         });
+        result.unshift("*")
         return result;
       }
     },
